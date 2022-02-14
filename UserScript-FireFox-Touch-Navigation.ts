@@ -6,52 +6,42 @@
 // @author       Tony Fabian
 // @include      *://*/*
 // @grant        none
-// @noframes
 // @license MIT
+// @noframes
 // ==/UserScript==
 
-(function() {
+(function() {  
+     
+  // Register touchstart and touchend listeners for element 'source'
+  var src = document.getElementsByTagName("body")[0]; 
+  var clientX: number, clientY: number;
   
-    window.addEventListener('load', function(){
-            
-      var bodyTag = document.getElementsByTagName("body");
-      if (bodyTag != null){
-        var body = bodyTag[0];
-        
-        if (body != null){                   
+  src.addEventListener('touchstart', function(e) {
+    // Cache the client X/Y coordinates
+    clientX = e.touches[0].clientX;
+    clientY = e.touches[0].clientY;
+  
+  }, false);
+  
+  src.addEventListener('touchend', function(e) {
+    var deltaX, deltaY;
+  
+    // Compute the change in X and Y coordinates.
+    // The first touch point in the changedTouches
+    // list is the touch point that was just removed from the surface.
+    deltaX = e.changedTouches[0].clientX - clientX;
+    deltaY = e.changedTouches[0].clientY - clientY;
+  
+    if (deltaX <= -75){
+      console.log("navigate back");
+      history.back();
+    }
+  
+    if (deltaX >= 75){
+      console.log("navigate forward");
+      history.forward();
+    }
 
-          var clientX: number, clientY: number;
-    
-          body.addEventListener('touchstart', function(e) {
-            // Cache the client X/Y coordinates
-            clientX = e.touches[0].clientX;
-            clientY = e.touches[0].clientY;
-          
-          }, false);
-          
-          body.addEventListener('touchend', function(e) {
-            var deltaX: number, deltaY: number;
-          
-            // Compute the change in X and Y coordinates.
-            // The first touch point in the changedTouches
-            // list is the touch point that was just removed from the surface.
-            deltaX = e.changedTouches[0].clientX - clientX;
-            deltaY = e.changedTouches[0].clientY - clientY;
-          
-            if (deltaX <= -75){
-              console.log("navigate back");
-              history.back();
-            }
-          
-            if (deltaX >= 75){
-              console.log("navigate forward");
-              history.forward();
-            }
-      
-          }, false);
+  }, false);
 
-        }
-      }
-      
-    });
 })();
