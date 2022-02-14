@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Touch UI back and forward buttons for FireFox
 // @namespace    userscript@fabian.dk
-// @version      0.1
+// @version      0.2
 // @description  Fixing FireFox Touch navigation
 // @author       Tony Fabian
 // @include      *://*/*
