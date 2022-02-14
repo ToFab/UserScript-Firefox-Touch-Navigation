@@ -7,6 +7,7 @@
 // @include      *://*/*
 // @grant        none
 // @noframes
+// @license MIT
 // ==/UserScript==
 
 (function() {
