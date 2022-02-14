@@ -4,18 +4,17 @@ This script enable you to using a single finger to move back and forward in the 
 
 installation
 =============
+open UserScript-FireFox-Touch-Navigation.js
+Add script to greasemonkey.
+Save
+Reload the browser
 
+Compile from source
+===================
 Install node.js
 npm install -g typescript
 
 Navigate to directory where UserScript-FireFox-Touch-Navigation.ts is placed
 run: tsc .\UserScript-FireFox-Touch-Navigation.ts
-
-open UserScript-FireFox-Touch-Navigation.js
-Add script to greasemonkey.
-Save
-Reload browser
-
-
 
 Pull requests are welcome. 
