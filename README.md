@@ -1,5 +1,6 @@
-# UserScript-Firefox-Touch-Navigation
-Greesemonkey script that enable back and forward navigation using touch in firefox
+# UserScript Firefox Touch Navigation
+Greesemonkey script that enable back and forward navigation using touch in firefox. Inspired by Microsoft Edge.
+This script enable you to using a single finger to move back and forward in the browser history by swiping anywhere on the body of the page.
 
 installation
 =============
@@ -15,8 +16,6 @@ Add script to greasemonkey.
 Save
 Reload browser
 
-You can now with a single finger move back and forward in the browser history by swiping anywhere on the body of the page.
 
-Inspired by Microsoft Edge.
 
 Pull requests are welcome. 
