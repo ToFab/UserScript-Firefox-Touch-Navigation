@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "nodemo": "^1.0.0",
+    "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "nodemon server.js -e ejs,js,css,html,jpg,png,scss"
+  }
+}

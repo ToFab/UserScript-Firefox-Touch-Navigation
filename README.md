@@ -11,8 +11,8 @@ installation
 Can be installed from https://greasyfork.org/en/scripts/440013-touch-ui-back-and-forward-buttons-for-firefox
 or by:
 
-- open UserScript-FireFox-Touch-Navigation.js
-- Add script from UserScript-FireFox-Touch-Navigation.js to tampermonkey.
+- open FireFox-Touch-Navigation.js
+- Add script from FireFox-Touch-Navigation.js to tampermonkey.
 Save
 Reload the browser
 Start swimping left or right
@@ -23,7 +23,7 @@ Compile from source
 Install node.js
 npm install -g typescript
 
-Navigate to directory where UserScript-FireFox-Touch-Navigation.ts is placed
-run: tsc .\UserScript-FireFox-Touch-Navigation.ts
+Navigate to directory where FireFox-Touch-Navigation.ts is placed
+run: tsc .\FireFox-Touch-Navigation.ts
 
 Pull requests are welcome. 
