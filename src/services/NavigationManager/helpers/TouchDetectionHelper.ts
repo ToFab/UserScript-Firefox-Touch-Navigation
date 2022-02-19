@@ -67,7 +67,7 @@ export class TouchDetectionHelper {
                 this.loggingService.LogWarn("Swipe 'left down' in progress", this.DetectSwipeGesture.name, log);
             };
 
-            var high = 135;
+            var high = 105;
             var low = -135;
 
             if (degree >= low && degree <= high) {
