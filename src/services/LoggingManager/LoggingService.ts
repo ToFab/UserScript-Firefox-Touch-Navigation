@@ -4,12 +4,30 @@ export class LoggingService {
 
     constructor(className: string){
         this._className = className;
-    }
+    }  
 
-    Log(message: string, caller: string, enabled: boolean) {
+    LogInfo(message: string, caller: string, enabled: boolean) {
         if (enabled){
-            console.log(`${this._className}.${caller} : ${message}`);            
+            console.log(`${this._className}.${caller} - ${message}`);            
         }        
-    }   
+    };
+    
+    LogSuccess(message: string, caller: string, enabled: boolean) {
+        if (enabled){
+            console.log(`%c${this._className}.${caller} - ${message}`,'color: green;font-weight:bold;');            
+        }        
+    };
+
+    LogWarn(message: string, caller: string, enabled: boolean) {
+        if (enabled){
+            console.log(`%c${this._className}.${caller} - ${message}`,'color: yellow;font-weight:bold;');            
+        }        
+    };
+
+    LogError(message: string, caller: string, enabled: boolean) {
+        if (enabled){
+            console.log(`%c${this._className}.${caller} - ${message}`,'color: red;font-weight:bold;');            
+        }        
+    };
 
 }
