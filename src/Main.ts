@@ -13,21 +13,17 @@
 import { BaseService } from "./services/NavigationManager/BaseService";
 import { TouchPoint } from "./models/TouchPoint";
 
-(function () {
+(function () { 
 
+  
   /* user settings */
-  const thredshold: number = 75;
-  var enableLoggingDegreeHelper = false;
-  var enableLoggingHorisontalHelper = false;
-  var enableLoggingTouchDetectionHelper = false;
+  const thredshold: number = 75;  
+  var enableLoggingTouchDetectionHelper = true;
   var enableLoggingThredsholdHelper = false;
 
-  var instance = BaseService.getInstance();
-
-  instance.DegreeHelper.EnableLogging(enableLoggingDegreeHelper);
-  instance.HorisontalHelper.EnableLogging(enableLoggingHorisontalHelper);
-  instance.TouchDetectionHelper.EnableLogging(enableLoggingTouchDetectionHelper);
-  instance.ThredsholdHelper.EnableLogging(enableLoggingThredsholdHelper);
+  // note: you can enable/disable logging for baseservice on the baseservice class  
+  BaseService.getInstance().TouchDetectionHelper.EnableLogging(enableLoggingTouchDetectionHelper);
+  BaseService.getInstance().ThredsholdHelper.EnableLogging(enableLoggingThredsholdHelper);
 
   /* user settings end */
 
@@ -45,8 +41,6 @@ import { TouchPoint } from "./models/TouchPoint";
   }
 
   window.addEventListener("load", function () {
-
-
 
     var src = document.getElementsByTagName("body")[0];
 

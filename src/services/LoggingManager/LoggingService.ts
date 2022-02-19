@@ -1,23 +1,13 @@
-export class LoggingService{
+export class LoggingService {
 
-    loggingEnabled: boolean = false;
-    _name:string = "";
-
-    Log(message:string){
-        
-        if(this.loggingEnabled){
-            console.log(this._name, message);
-        }
+    Log(message: string, caller: string, enabled: boolean) {
+        if (enabled){
+            console.log(caller, message);
+        }        
     }
 
-    EnableLog(enable:boolean, name:string){
-        this.loggingEnabled = enable;
-        this._name = name;
-    }
-
-    constructor(enableLogging:boolean, name: string){
-        this.loggingEnabled = enableLogging;   
-        this._name = name;     
+    GetIdentifier(className: string, functionName: string){
+        return className + "." + functionName;
     }
 
 }

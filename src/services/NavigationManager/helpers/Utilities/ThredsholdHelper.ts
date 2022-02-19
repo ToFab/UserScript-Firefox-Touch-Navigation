@@ -4,11 +4,12 @@ import { LoggingService } from "../../../LoggingManager/LoggingService";
 
 export class ThredsholdHelper {
 
+    className =  ThredsholdHelper.name;
     loggingEnabled = false;
     loggingService: LoggingService;
 
     constructor() {
-        this.loggingService = new LoggingService(this.loggingEnabled, "ThredsholdHelper");
+        this.loggingService = new LoggingService();
     };
 
     EnableLogging(enable: boolean){
@@ -18,18 +19,16 @@ export class ThredsholdHelper {
         this.loggingEnabled = enable;
     }
 
-    ThredsholdExceeded(current: TouchPoint, thredshold: number, first: TouchPoint) {
-
-        var loggingService = new LoggingService(this.loggingEnabled, "ThredsholdHelper");
-
+    ThredsholdExceeded(current: TouchPoint, thredshold: number, first: TouchPoint) {        
+        
         var deltas = this.GetDeltas(current, first);
         if (deltas.deltaX > thredshold && deltas.deltaX > -1) {
             
-            loggingService.Log(`Thredshold: true deltaX: ${deltas.deltaX} thredshold: ${thredshold}`);
+            this.loggingService.Log(`Thredshold: true deltaX: ${deltas.deltaX} thredshold: ${thredshold}`, this.loggingService.GetIdentifier(this.className, this.ThredsholdExceeded.name), this.loggingEnabled);
             
             return true;
         }
-        loggingService.Log(`Thredshold: false deltaX: ${deltas.deltaX}`);
+        this.loggingService.Log(`Thredshold: false deltaX: ${deltas.deltaX}`,this.loggingService.GetIdentifier(this.className, this.ThredsholdExceeded.name), this.loggingEnabled);
         
         return false;
     }

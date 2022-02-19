@@ -1,7 +1,5 @@
 import { TouchPoint } from "../../models/TouchPoint";
-import { DegreeHelper } from "./helpers/Utilities/DegreeHelper";
 import { TouchDetectionHelper } from "./helpers/TouchDetectionHelper";
-import { HorisontalHelper } from "./helpers/Utilities/HorisontalHelper";
 import { ThredsholdHelper } from "./helpers/Utilities/ThredsholdHelper";
 import { LoggingService } from "../LoggingManager/LoggingService";
 
@@ -9,12 +7,11 @@ export const thredshold = 75;
 
 export class BaseService {
 
-    _baseServiceloggingEnabled = false; 
+    _baseServiceloggingEnabled = true; 
     
+    className =  BaseService.name;
     private static instance: BaseService;
-    LoggingService: LoggingService;
-    DegreeHelper: DegreeHelper;
-    HorisontalHelper: HorisontalHelper;
+    LoggingService: LoggingService;       
     TouchDetectionHelper: TouchDetectionHelper;
     ThredsholdHelper: ThredsholdHelper;       
     BaseServiceloggingEnabled = this._baseServiceloggingEnabled;
@@ -31,9 +28,7 @@ export class BaseService {
     constructor() {
 
         this.BaseServiceloggingEnabled = this._baseServiceloggingEnabled;
-        this.LoggingService = new LoggingService(this.BaseServiceloggingEnabled,"LoggingService");
-        this.DegreeHelper = new DegreeHelper();
-        this.HorisontalHelper = new HorisontalHelper();
+        this.LoggingService = new LoggingService();              
         this.TouchDetectionHelper = new TouchDetectionHelper();
         this.ThredsholdHelper = new ThredsholdHelper();
     }
@@ -42,12 +37,13 @@ export class BaseService {
 
 
         if (multiTouchDetected) {
+            this.LoggingService.Log("MultiTouch detected. Abort",this.LoggingService.GetIdentifier(this.className, this.ShouldNavigate.name),this._baseServiceloggingEnabled);
             return false;
         }       
 
         var shouldNavigate = (
             !multiTouchDetected 
-            && BaseService.instance.HorisontalHelper.isHorisontalIsh(current, first) 
+            && BaseService.instance.TouchDetectionHelper.isHorisontalSwipe(current, first) 
             && BaseService.instance.TouchDetectionHelper.isCurrentTouchOneFinger(current) 
             && BaseService.instance.TouchDetectionHelper.wasPreviousTouchOneFinger(previous) 
             && BaseService.instance.ThredsholdHelper.ThredsholdExceeded(current, thredshold, first));
@@ -55,7 +51,7 @@ export class BaseService {
         if (shouldNavigate){
             if (history.length == 0) {
 
-                this.LoggingService.Log("History is empty");
+                this.LoggingService.Log("History is empty",this.LoggingService.GetIdentifier(this.className, this.ShouldNavigate.name),this._baseServiceloggingEnabled);
     
                 return false;
             }
