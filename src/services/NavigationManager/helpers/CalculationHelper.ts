@@ -29,7 +29,8 @@ export class CalculationHelper {
 
     ThredsholdExceeded(current: TouchPoint, thredshold: number, first: TouchPoint, log: boolean) {
 
-        var deltas = this.GetDeltas(current, first);
+        var deltas = this.GetDeltas(current, first, log);
+
         if (deltas.deltaX > thredshold && deltas.deltaX > -1) {
 
             this.loggingService.LogSuccess(`Thredshold: true deltaX: ${deltas.deltaX} thredshold: ${thredshold}`, this.ThredsholdExceeded.name, log);
@@ -41,11 +42,17 @@ export class CalculationHelper {
         return false;
     }
 
-    GetDeltas(current: TouchPoint, first: TouchPoint) {
+    GetDeltas(current: TouchPoint, first: TouchPoint, log:boolean) {
 
+        var deltaX = current.clientX - first.clientX;
+        var deltaY = current.clientY - first.clientY;
+
+        this.loggingService.LogInfo(`deltaX ${deltaX}`, this.ThredsholdExceeded.name, log);
+        this.loggingService.LogInfo(`deltaY: ${deltaY}`, this.ThredsholdExceeded.name, log);
+        
         return {
-            deltaX: current.clientX - first.clientX,
-            deltaY: current.clientY - first.clientY
+            deltaX: deltaX,
+            deltaY: deltaY
         }
     }
 }

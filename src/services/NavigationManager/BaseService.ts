@@ -8,10 +8,9 @@ export const thredshold = 75;
 export class BaseService {
 
     _printSummary = true;
-
     _traceSwipeGesture = false;
     _traceTouchGesture = false;
-    _traceThredshold = false;
+    _traceThredshold = true;
     _traceCalcuations = false;
 
     private static instance: BaseService;
@@ -65,16 +64,15 @@ export class BaseService {
             this.LoggingService.LogInfo("MultiTouch detected. Abort", this.ShouldNavigate.name, this._traceBaseService);
             return false;
         }
-
-        var check4MultiTouch = !multiTouchDetected;
+        
         var check4SwipeGesture = BaseService.instance.TouchDetectionHelper.DetectSwipeGesture(current, first, this._traceSwipeGesture);
         var check4OneFingerTouch = BaseService.instance.TouchDetectionHelper.IsOneFingerTouch(current, this._traceTouchGesture);
         var checkTouchSerie = BaseService.instance.TouchDetectionHelper.wasPreviousOneFingerTouch(previous, this._traceTouchGesture);
         var checkSwipeLength = BaseService.instance.CalculationHelper.ThredsholdExceeded(current, thredshold, first, this._traceCalcuations);
 
-        var shouldNavigate = !check4MultiTouch && check4SwipeGesture && check4OneFingerTouch && checkTouchSerie && checkSwipeLength;
+        var shouldNavigate = !multiTouchDetected && check4SwipeGesture && check4OneFingerTouch && checkTouchSerie && checkSwipeLength;
 
-        this.printSummary(check4MultiTouch, check4SwipeGesture, check4OneFingerTouch, checkTouchSerie, checkSwipeLength);
+        this.printSummary(multiTouchDetected, check4SwipeGesture, check4OneFingerTouch, checkTouchSerie, checkSwipeLength);
 
         if (shouldNavigate) {
             if (history.length == 0) {
@@ -95,7 +93,7 @@ export class BaseService {
             this.LoggingService.LogWarn(`All test below must pass before navigation start`, this.ShouldNavigate.name, true);
             var result = "FAIL";
 
-            if (!check4MultiTouch) {
+            if (check4MultiTouch == false) {
                 result = "PASS"
                 this.LoggingService.LogSuccess(`multiTouchDetected : ${result}`, this.ShouldNavigate.name, true);
             } else {
@@ -103,7 +101,7 @@ export class BaseService {
             };
 
             result = "FAIL";
-            if (!check4SwipeGesture) {
+            if (check4SwipeGesture == true) {
                 result = "PASS"
                 this.LoggingService.LogSuccess(`DetectSwipeGesture : ${result}}`, this.ShouldNavigate.name, true);
             } else {
@@ -111,7 +109,7 @@ export class BaseService {
             };
 
             result = "FAIL";
-            if (!check4OneFingerTouch) {
+            if (check4OneFingerTouch == true) {
                 result = "PASS"
                 this.LoggingService.LogSuccess(`IsOneFingerTouch : ${result}`, this.ShouldNavigate.name, true);
             } else {
@@ -119,16 +117,15 @@ export class BaseService {
             };
 
             result = "FAIL";
-            if (!checkTouchSerie) {
+            if (checkTouchSerie == true) {
                 result = "PASS"
                 this.LoggingService.LogSuccess(`wasPreviousOneFingerTouch : ${result}`, this.ShouldNavigate.name, true);
             } else {
                 this.LoggingService.LogError(`wasPreviousOneFingerTouch : ${result}`, this.ShouldNavigate.name, true);
             };
 
-
             result = "FAIL";
-            if (!checkSwipeLength) {
+            if (checkSwipeLength == true) {
                 result = "PASS"
                 this.LoggingService.LogSuccess(`ThredsholdExceeded : ${result}`, this.ShouldNavigate.name, this._traceBaseService);
             } else {

@@ -16,7 +16,10 @@ import { LoggingService } from "./services/LoggingManager/LoggingService";
 
 (function () {
 
+  var _traceCalcuations:boolean = false;
+
   var loggingService = new LoggingService("Main");
+  
   
   /* user settings */
   const thredshold: number = 75;
@@ -76,7 +79,7 @@ import { LoggingService } from "./services/LoggingManager/LoggingService";
 
         if (BaseService.getInstance().ShouldNavigate(current, first, previous, thredshold, multiTouchDetected)) {
 
-          var deltas = BaseService.getInstance().CalculationHelper.GetDeltas(current, first);
+          var deltas = BaseService.getInstance().CalculationHelper.GetDeltas(current, first, _traceCalcuations);
           if (deltas.deltaX <= -75) {
 
             console.log("We must navigate back");

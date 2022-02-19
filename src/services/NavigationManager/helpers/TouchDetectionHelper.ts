@@ -77,6 +77,7 @@ export class TouchDetectionHelper {
             }
         }
         
+        this.loggingService.LogInfo(`Degree ${degree} is outside of the valid range.`, this.DetectSwipeGesture.name, log);
         return false;
     }
 }
