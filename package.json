@@ -5,5 +5,11 @@
   },
   "scripts": {
     "start": "nodemon server.js -e ejs,js,css,html,jpg,png,scss"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.5",
+    "webpack": "^5.69.1",
+    "webpack-cli": "^4.9.2"
   }
 }
