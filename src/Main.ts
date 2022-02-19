@@ -17,13 +17,7 @@ import { TouchPoint } from "./models/TouchPoint";
 
   
   /* user settings */
-  const thredshold: number = 75;  
-  var enableLoggingTouchDetectionHelper = true;
-  var enableLoggingThredsholdHelper = false;
-
-  // note: you can enable/disable logging for baseservice on the baseservice class  
-  BaseService.getInstance().TouchDetectionHelper.EnableLogging(enableLoggingTouchDetectionHelper);
-  BaseService.getInstance().ThredsholdHelper.EnableLogging(enableLoggingThredsholdHelper);
+  const thredshold: number = 75;    
 
   /* user settings end */
 

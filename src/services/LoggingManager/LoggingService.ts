@@ -1,13 +1,15 @@
 export class LoggingService {
 
-    Log(message: string, caller: string, enabled: boolean) {
-        if (enabled){
-            console.log(caller, message);
-        }        
+    private _className: string;
+
+    constructor(className: string){
+        this._className = className;
     }
 
-    GetIdentifier(className: string, functionName: string){
-        return className + "." + functionName;
-    }
+    Log(message: string, caller: string, enabled: boolean) {
+        if (enabled){
+            console.log(`${this._className}.${caller} : ${message}`);            
+        }        
+    }   
 
 }

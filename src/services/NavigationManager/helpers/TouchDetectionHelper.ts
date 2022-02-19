@@ -3,65 +3,54 @@ import { LoggingService } from "../../LoggingManager/LoggingService";
 import { BaseService } from "../BaseService";
 
 
-export class TouchDetectionHelper {
+export class TouchDetectionHelper {    
+    
+    loggingService: LoggingService;   
 
-    className =  TouchDetectionHelper.name;
-    loggingEnabled = false;
-    loggingService: LoggingService;
+    constructor(){
+        this.loggingService = new LoggingService(TouchDetectionHelper.name);        
+    }   
 
-    constructor() {
-        this.loggingService = new LoggingService();
-    };
-
-    EnableLogging(enable: boolean) {
-        if (enable) {
-            console.log("Logging enabled for TouchDetectionHelper");
-        }
-        this.loggingEnabled = enable;
-    }
-
-    isCurrentTouchOneFinger(current: TouchPoint) {
+    isCurrentTouchOneFinger(current: TouchPoint, log:boolean) {
 
         var retval = (current.touches == 0 && current.targetTouches == 0 && current.changedTouches == 0);
-        this.loggingService.Log(`isCurrentTouchOneFinger: ${retval}`, this.loggingService.GetIdentifier(this.className, this.isCurrentTouchOneFinger.name), this.loggingEnabled);
+        this.loggingService.Log(`isCurrentTouchOneFinger: ${retval}`, this.isCurrentTouchOneFinger.name, log);
         return retval;
     }
 
-    wasPreviousTouchOneFinger(previous: TouchPoint) {
+    wasPreviousTouchOneFinger(previous: TouchPoint, log:boolean) {
 
         var retval = (previous.touches == 1 && previous.targetTouches == 1 && previous.changedTouches == 1);
-        this.loggingService.Log(`wasPreviousTouchOneFinger: ${retval}`, this.loggingService.GetIdentifier(this.className, this.isCurrentTouchOneFinger.name), this.loggingEnabled);
+        this.loggingService.Log(`wasPreviousTouchOneFinger: ${retval}`, this.isCurrentTouchOneFinger.name, log);
 
         return retval;
     }
 
-    isHorisontalSwipe(current: TouchPoint, first: TouchPoint) {
+    isHorisontalSwipe(current: TouchPoint, first: TouchPoint, log:boolean) {
 
-        var name = "TouchDetectionHelper.isHorisontalSwipe"
-
-        this.loggingService.Log("Entering isHorisontalIsh", this.loggingService.GetIdentifier(this.className, this.isHorisontalSwipe.name), this.loggingEnabled);
-        var degree = this.GetDegree(current, first);
-        this.loggingService.Log(`Degree A: ${degree}`, name, this.loggingEnabled);
+        this.loggingService.Log("Entering isHorisontalIsh", this.isHorisontalSwipe.name, log);
+        var degree = this.GetDegree(current, first, log);
+        this.loggingService.Log(`Degree A: ${degree}`, this.isHorisontalSwipe.name, log);
 
         if ((degree >= -36 && degree <= 15) || (degree >= -150 && degree <= 165)) {
-            this.loggingService.Log("Degree is within valid range", this.loggingService.GetIdentifier(this.className, this.isHorisontalSwipe.name), this.loggingEnabled);
+            this.loggingService.Log("Degree is within valid range", this.isHorisontalSwipe.name, log);
 
             return true;
         } else {
-            console.log("Degree is outside of valid range.", this.loggingService.GetIdentifier(this.className, this.isHorisontalSwipe.name));
+            console.log("Degree is outside of valid range.", this.isHorisontalSwipe.name, this.isHorisontalSwipe.name, true);
         }
 
         return false;
     }
 
-    GetDegree(current: TouchPoint, first: TouchPoint): number { 
+    GetDegree(current: TouchPoint, first: TouchPoint, log:boolean): number { 
 
         var tmpX = current.clientX - first.clientX;
         var tmpY = current.clientY - first.clientY;
         var rad = Math.atan2(tmpY, tmpX); // In radians
         var degree = Math.round(rad * (180 / Math.PI));
 
-        this.loggingService.Log(`Degreexxx: ${degree}`,this.loggingService.GetIdentifier(this.className, this.GetDegree.name), this.loggingEnabled);
+        this.loggingService.Log(`Degreexxx: ${degree}`,this.GetDegree.name, log);
 
 
         return degree;

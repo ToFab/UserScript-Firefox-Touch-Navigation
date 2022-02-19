@@ -6,15 +6,17 @@ import { LoggingService } from "../LoggingManager/LoggingService";
 export const thredshold = 75;
 
 export class BaseService {
-
-    _baseServiceloggingEnabled = true; 
+    
+    _traceHorisontalSwipe = true;
+    _traceCurrentTouch = false;
+    _traceThredshold = false;
+    _traceBaseService = false;
     
     className =  BaseService.name;
     private static instance: BaseService;
     LoggingService: LoggingService;       
     TouchDetectionHelper: TouchDetectionHelper;
-    ThredsholdHelper: ThredsholdHelper;       
-    BaseServiceloggingEnabled = this._baseServiceloggingEnabled;
+    ThredsholdHelper: ThredsholdHelper;           
 
     static getInstance(): BaseService {
 
@@ -27,31 +29,49 @@ export class BaseService {
 
     constructor() {
 
-        this.BaseServiceloggingEnabled = this._baseServiceloggingEnabled;
-        this.LoggingService = new LoggingService();              
+        if (this._traceCurrentTouch == true || this._traceHorisontalSwipe == true || this._traceThredshold == true){
+
+            console.log("Logging enabled for BaseService");            
+            this._traceBaseService = true;
+
+            if (this._traceCurrentTouch == true){
+                console.log("Logging enabled for CurrentTouch");            
+            }
+
+            if (this._traceHorisontalSwipe == true){
+                console.log("Logging enabled for HorisontalSwipe");            
+            }
+
+            if (this._traceThredshold == true){
+                console.log("Logging enabled for Thredshold");            
+            }
+        }else{
+            console.log("wtf");
+        }
+        
+        this.LoggingService = new LoggingService(BaseService.name);              
         this.TouchDetectionHelper = new TouchDetectionHelper();
         this.ThredsholdHelper = new ThredsholdHelper();
     }
 
     ShouldNavigate(current: TouchPoint, first: TouchPoint, previous: TouchPoint, thredshold: number, multiTouchDetected: boolean): boolean {
 
-
         if (multiTouchDetected) {
-            this.LoggingService.Log("MultiTouch detected. Abort",this.LoggingService.GetIdentifier(this.className, this.ShouldNavigate.name),this._baseServiceloggingEnabled);
+            this.LoggingService.Log("MultiTouch detected. Abort",this.ShouldNavigate.name,this._traceBaseService);
             return false;
         }       
 
         var shouldNavigate = (
             !multiTouchDetected 
-            && BaseService.instance.TouchDetectionHelper.isHorisontalSwipe(current, first) 
-            && BaseService.instance.TouchDetectionHelper.isCurrentTouchOneFinger(current) 
-            && BaseService.instance.TouchDetectionHelper.wasPreviousTouchOneFinger(previous) 
-            && BaseService.instance.ThredsholdHelper.ThredsholdExceeded(current, thredshold, first));
+            && BaseService.instance.TouchDetectionHelper.isHorisontalSwipe(current, first, this._traceHorisontalSwipe) 
+            && BaseService.instance.TouchDetectionHelper.isCurrentTouchOneFinger(current,this._traceCurrentTouch) 
+            && BaseService.instance.TouchDetectionHelper.wasPreviousTouchOneFinger(previous,this._traceCurrentTouch) 
+            && BaseService.instance.ThredsholdHelper.ThredsholdExceeded(current, thredshold, first,this._traceThredshold));
 
         if (shouldNavigate){
             if (history.length == 0) {
 
-                this.LoggingService.Log("History is empty",this.LoggingService.GetIdentifier(this.className, this.ShouldNavigate.name),this._baseServiceloggingEnabled);
+                this.LoggingService.Log("History is empty",this.ShouldNavigate.name,this._traceBaseService);
     
                 return false;
             }
