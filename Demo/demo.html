@@ -36,9 +36,25 @@
 
         #container {
             width: 100%;
-            height: 100%;            
-            background-color: aquamarine;
-            
+            height: 100%;
+        }
+
+        #leftbox {
+            position: absolute;
+            left: 100px;
+            top: 100px;
+            width: 300px;
+            height: 300px;
+            background: red;
+        }
+
+        #rightbox {
+            position: absolute;
+            left: 500px;
+            top: 100px;
+            width: 300px;
+            height: 300px;
+            background: yellow;
         }
     </style>
 </head>
@@ -46,12 +62,61 @@
 <body>
     <div id="container">
         <div id="box">
-            <center><h1>Multi-touch interactionx</h1></center>
-            <center><p>Tap, Hold or Swipe me</p></center>
+            <center>
+                <h1>Swipe left or right</h1>
+            </center>
+            <center id="output1"></center>
+            <center id="output2"></center>
         </div>
+        <div id="leftbox">box</div>
+        <div id="rightbox">box</div>
     </div>
 
     <script src="./app-bundle.js">
+    </script>
+    <script>
+        window.addEventListener("load", function () {
+            var speed = 10, // the box will move by 10 pixels on every step
+                direction = 1, // 1 = move right; -1 = move left
+                boxElement1 = document.getElementById('leftbox');
+            boxElement2 = document.getElementById('rightbox');
+
+            if (boxElement1) {
+                boxElement1.addEventListener('mouseover', function () {
+                    // Calculate and store some of the box coordinates:
+                    var boxLeftPos = boxElement1.offsetLeft,
+                        boxRightPos = boxLeftPos + boxElement1.offsetWidth;
+                    // When right side of the box goes too far - change direction:
+                    if (boxRightPos > document.body.offsetWidth) {
+                        direction = -1;
+                    }
+                    // When left side of the box goes too far - change direction:
+                    if (boxLeftPos < 0) {
+                        direction = 1;
+                    }
+                    // Recalculate position:
+                    boxElement1.style.left = (boxLeftPos + speed * direction) + 'px';
+                });
+            };
+
+            if (boxElement2) {
+                boxElement2.addEventListener('mouseover', function () {
+                    // Calculate and store some of the box coordinates:
+                    var boxLeftPos = boxElement2.offsetLeft,
+                        boxRightPos = boxLeftPos + boxElement2.offsetWidth;
+                    // When right side of the box goes too far - change direction:
+                    if (boxRightPos > document.body.offsetWidth) {
+                        direction = -1;
+                    }
+                    // When left side of the box goes too far - change direction:
+                    if (boxLeftPos < 0) {
+                        direction = 1;
+                    }
+                    // Recalculate position:
+                    boxElement2.style.left = (boxLeftPos + speed * direction) + 'px';
+                });
+            }
+        });        
     </script>
 </body>
 

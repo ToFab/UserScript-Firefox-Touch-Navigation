@@ -1,6 +1,6 @@
 import { TouchPoint } from "../../../models/TouchPoint";
 import { LoggingService } from "../../LoggingManager/LoggingService";
-import { BaseService, thredshold } from "../BaseService";
+import { BaseService } from "../BaseService";
 
 export class TouchDetectionHelper {
 
@@ -10,74 +10,55 @@ export class TouchDetectionHelper {
         this.loggingService = new LoggingService(TouchDetectionHelper.name);
     }
 
-    IsOneFingerTouch(current: TouchPoint, log: boolean) {
+    ValidateTouch(current: TouchPoint, log: boolean) {
 
         var retval = (current.touches == 0 && current.targetTouches == 0 && current.changedTouches == 0);
         if (retval) {
-            this.loggingService.LogSuccess(`isCurrentTouchOneFinger: ${retval}`, this.IsOneFingerTouch.name, log);
+            this.loggingService.LogSuccess(`${retval}`, this.ValidateTouch.name, log);
         } else {
-            this.loggingService.LogInfo(`isCurrentTouchOneFinger: ${retval}`, this.IsOneFingerTouch.name, log);
+            this.loggingService.LogInfo(`${retval}`, this.ValidateTouch.name, log);
         }
 
         return retval;
     }
 
-    wasPreviousOneFingerTouch(previous: TouchPoint, log: boolean) {
+    ValidateTouchSeries(previous: TouchPoint, log: boolean) {
 
         var retval = (previous.touches == 1 && previous.targetTouches == 1 && previous.changedTouches == 1);
         if (retval) {
-            this.loggingService.LogSuccess(`wasPreviousTouchOneFinger: ${retval}`, this.IsOneFingerTouch.name, log);
+            this.loggingService.LogSuccess(`${retval}`, this.ValidateTouchSeries.name, log);
         } else {
-            this.loggingService.LogInfo(`wasPreviousTouchOneFinger: ${retval}`, this.IsOneFingerTouch.name, log);
+            this.loggingService.LogInfo(`${retval}`, this.ValidateTouchSeries.name, log);
         }
 
 
         return retval;
     }
 
-    DetectSwipeGesture(last: TouchPoint, first: TouchPoint, log: boolean) {        
+    ValidateSwipeAngle(first: TouchPoint, last: TouchPoint, log: boolean) {
 
-        var degree = BaseService.getInstance().CalculationHelper.GetDegree(last, first, log);
-
-        // Swipe right action.
-        if (last.clientX > first.clientX) {
-
-            if (last.clientY < first.clientY) {
-                this.loggingService.LogWarn("Swipe 'right up' in progress", this.DetectSwipeGesture.name, log);
-            } else {
-                this.loggingService.LogWarn("Swipe 'right down' in progress", this.DetectSwipeGesture.name, log);
-            };
-
-            var high = 45;
-            var low = -45;
-
-            if (degree >= low && degree <= high) {
-
-                this.loggingService.LogSuccess(`Degree ${degree} is within valid range.`, this.DetectSwipeGesture.name, log);
-                return true;
-            }
-        }
-
-        // Swipe left action
-        if (first.clientX > last.clientX) {
-
-            if (last.clientY < first.clientY) {
-                this.loggingService.LogWarn("Swipe 'left up' in progress", this.DetectSwipeGesture.name, log);
-            } else {
-                this.loggingService.LogWarn("Swipe 'left down' in progress", this.DetectSwipeGesture.name, log);
-            };
-
-            var high = 105;
-            var low = -135;
-
-            if (degree >= low && degree <= high) {
-
-                this.loggingService.LogSuccess(`Degree ${degree} is within valid range.`, this.DetectSwipeGesture.name, log);
-                return true;
-            }
-        }
+        // We want to disregard all swipe that are almost virtical or very steep in angle.
+        var angle = BaseService.getInstance().CalculationHelper.GetAngle(first, last, log);
         
-        this.loggingService.LogInfo(`Degree ${degree} is outside of the valid range.`, this.DetectSwipeGesture.name, log);
+        if (angle < 75) {            
+            this.loggingService.LogSuccess(`The swipe angle is OK`, this.ValidateSwipeAngle.name, log);            
+            return true;
+        };
+        
+        this.loggingService.LogWarn(`The swipe is too steep. Continue`, this.ValidateSwipeAngle.name, log);            
         return false;
-    }
-}
+    };
+
+    ValidateSwipeLength(first: TouchPoint, last: TouchPoint,  minimumSwipeLength: number, log: boolean) {
+
+        var virtualTouchPoint = BaseService.getInstance().CalculationHelper.GetVirtualCoordinates(first, last, log); 
+        
+        if (virtualTouchPoint.X >  minimumSwipeLength) {            
+            this.loggingService.LogSuccess(`The swipe is horisontal. Continue`, this.ValidateSwipeLength.name, log);            
+            return true;
+        };
+        
+        this.loggingService.LogWarn(`The swipe is too steep. Continue`, this.ValidateSwipeLength.name, log);            
+        return false;
+    };
+};

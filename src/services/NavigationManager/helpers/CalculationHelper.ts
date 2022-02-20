@@ -7,52 +7,57 @@ export class CalculationHelper {
 
     constructor() {
         this.loggingService = new LoggingService(CalculationHelper.name);
-    }
+    };
 
-    GetDegree(current: TouchPoint, first: TouchPoint, log: boolean): number {
+    // 
+    GetVirtualCoordinates(p1: TouchPoint, p2: TouchPoint, log: boolean){
+        
+        var originalx1 = p1.clientX;
+        var originaly1 = p1.clientY;
+        var originalx2 = p2.clientX;
+        var originaly2 = p2.clientY;
 
-        this.loggingService.LogInfo("Calculate the degree / angel of the swipe", CalculationHelper.name, log);
+        var virtualx1 = 0;
+        var virtualy1 = 0;
 
-        this.loggingService.LogInfo(`x1: ${first.clientX}`, CalculationHelper.name, log);
-        this.loggingService.LogInfo(`y1: ${first.clientY}`, CalculationHelper.name, log);
-        this.loggingService.LogInfo(`x2: ${current.clientX}`, CalculationHelper.name, log);
-        this.loggingService.LogInfo(`y2: ${current.clientY}`, CalculationHelper.name, log);
-       
+        var virtualx2 = originalx2 - originalx1;
+        var virtualy2 = originaly1 - originaly2;
+        
+        this.loggingService.LogInfo(`Virtual p1: (${virtualx1},${virtualy1})`, this.GetVirtualCoordinates.name, log);
+        this.loggingService.LogInfo(`Virtual p2 (deltaX,deltaY): (${virtualx2},${virtualy2})`, this.GetVirtualCoordinates.name, log); 
 
-        var rad = Math.atan2((current.clientY - first.clientY), (current.clientX - first.clientX)); // In radians
-        var degree = Math.round(rad * (180 / Math.PI));
+        return {
+            X: Math.abs(virtualx2),
+            Y: Math.abs(virtualy2)
+        };
+    } ;   
 
-        this.loggingService.LogInfo(`Degree: ${degree}`, this.GetDegree.name, log);
+    GetAngle(first: TouchPoint, last: TouchPoint, log: boolean): number {        
 
-        return degree;
-    }
+        var virtualTouchPoint = this.GetVirtualCoordinates(first, last, log);        
 
-    ThredsholdExceeded(current: TouchPoint, thredshold: number, first: TouchPoint, log: boolean) {
+        var radian = Math.atan2(virtualTouchPoint.Y, virtualTouchPoint.X); // In radian           
+        var angle = Math.round(radian * (180 / Math.PI));
 
-        var deltas = this.GetDeltas(current, first, log);
+        this.loggingService.LogInfo(`Swipe angle: ${angle}`, this.GetAngle.name, log);
 
-        if (deltas.deltaX > thredshold && deltas.deltaX > -1) {
+        return angle;
+    };
 
-            this.loggingService.LogSuccess(`Thredshold: true deltaX: ${deltas.deltaX} thredshold: ${thredshold}`, this.ThredsholdExceeded.name, log);
+    ValidateSwipeLength(first: TouchPoint, last: TouchPoint, minimumSwipeLength: number, log: boolean):boolean {
 
+        var virtualTouchPoint = this.GetVirtualCoordinates(first, last, log);        
+
+        if (virtualTouchPoint.X > minimumSwipeLength){
+            
+            this.loggingService.LogInfo("Swipe has the minimum required length", this.ValidateSwipeLength.name, log);
             return true;
         }
-        this.loggingService.LogInfo(`Thredshold: false deltaX: ${deltas.deltaX}`, this.ThredsholdExceeded.name, log);
 
+        this.loggingService.LogInfo("Swipe is too short", this.ValidateSwipeLength.name, log);
         return false;
-    }
+      
+    };
 
-    GetDeltas(current: TouchPoint, first: TouchPoint, log:boolean) {
-
-        var deltaX = current.clientX - first.clientX;
-        var deltaY = current.clientY - first.clientY;
-
-        this.loggingService.LogInfo(`deltaX ${deltaX}`, this.ThredsholdExceeded.name, log);
-        this.loggingService.LogInfo(`deltaY: ${deltaY}`, this.ThredsholdExceeded.name, log);
-        
-        return {
-            deltaX: deltaX,
-            deltaY: deltaY
-        }
-    }
+    
 }

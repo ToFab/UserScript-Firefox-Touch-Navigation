@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Touch UI back and forward buttons for FireFox
+// @name         Touch navigation enhancments for FireFox
 // @namespace    userscript@fabian.dk
 // @version      0.3
-// @description  Fixing FireFox Touch navigation
+// @description  Zero configuration Edge like swipe navigation for Firefox
 // @author       Tony Fabian
 // @include      *://*/*
 // @grant        none
@@ -13,20 +13,23 @@
 import { BaseService } from "./services/NavigationManager/BaseService";
 import { TouchPoint } from "./models/TouchPoint";
 import { LoggingService } from "./services/LoggingManager/LoggingService";
+import { Direction } from "./models/enums";
 
 (function () {
 
-  var _traceCalcuations:boolean = false;
-
-  var loggingService = new LoggingService("Main");
-  
-  
   /* user settings */
-  const thredshold: number = 75;
+  const minimumSwipeLength: number = 45;
 
+  var _printSummary: boolean = false;
+  var _traceSwipeGesture: boolean = false;
+  var _traceTouchGesture: boolean = false;  
+  var _traceCalcuations: boolean = false;
   /* user settings end */
 
-  console.log("Hello world");
+  console.clear();
+  var loggingService = new LoggingService("Main");
+  BaseService.getInstance().InitializeLogging(_printSummary, _traceSwipeGesture, _traceTouchGesture, _traceCalcuations);
+  BaseService.getInstance().InitializeSettings(minimumSwipeLength);
 
   // var navigator = new NavigationService();
   var previous: TouchPoint;
@@ -41,16 +44,15 @@ import { LoggingService } from "./services/LoggingManager/LoggingService";
 
   window.addEventListener("load", function () {
 
-    let src = document.getElementsByTagName("body")[0];    
-    
-    if (src == null){
+    let src = document.getElementsByTagName("body")[0];
+
+    if (src == null) {
       loggingService.LogError("Did not find source element", "Main", true);
     }
-    
+
     if (src != null) {
-      
+
       src.addEventListener('touchstart', function (e: any) {
-        console.log("-----------------");
         // init start
         var current = new TouchPoint(e);
         registerMultiTouch(current);
@@ -77,38 +79,36 @@ import { LoggingService } from "./services/LoggingManager/LoggingService";
         registerMultiTouch(current);
         // init complete
 
-        if (BaseService.getInstance().ShouldNavigate(current, first, previous, thredshold, multiTouchDetected)) {
+        var tuple = BaseService.getInstance().ShouldWeNavigate(current, first, previous, minimumSwipeLength, multiTouchDetected);
 
-          var deltas = BaseService.getInstance().CalculationHelper.GetDeltas(current, first, _traceCalcuations);
-          if (deltas.deltaX <= -75) {
+        // We must navigate
+        if (tuple[0] == true) {
 
-            console.log("We must navigate back");
+          if (tuple[1] == Direction.Left) {
+
+            console.log("We must navigate back");            
             // history.back();
           }
 
-          if (deltas.deltaX >= 75) {
-            console.log("We must navigate forward");
+          if (tuple[1] == Direction.Right) {
+
+            console.log("We must navigate forward");            
             // history.forward();
           }
-        }
+        } 
+
         // init start
         previous = new TouchPoint(-1);
-        if (current.touches == 0) {
+
+        if (current.touches == 0) { // no fingers detected
           multiTouchDetected = false;
+          first = new TouchPoint(-1);
+        }else{
+          console.log("tuple is false");
         }
         // init complete
 
       }, false);
-
     }
-
-
-
-
-
   });
 })();
-
-
-
-
