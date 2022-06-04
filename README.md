@@ -6,7 +6,7 @@ The script works but I have not yet added visual controls. In egde (and firefox 
 
 How it works
 =============
-When you touch the screen the x,y coordinates are being registred. When you lift your finger again. If you have moved the finger more than 75px to the right or left navigation will be triggered.
+When you touch the screen the x,y coordinates are being registred. When you lift your finger again. If you have moved the finger more than 45px to the right or left navigation will be triggered.
 
 installation
 =============
